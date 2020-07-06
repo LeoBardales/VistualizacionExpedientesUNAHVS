@@ -1,0 +1,1906 @@
+package Interfaz;
+
+
+import Clases.MySql;
+import Clases.validacion;
+import java.awt.Color;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import modificar.frmModificar1;
+import modificar.frmReceta;
+import modificar.subsiguiente;
+import static sun.management.Agent.error;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Brenedin Enrique
+ */
+public class frmConsultaOdonto2 extends javax.swing.JInternalFrame {
+MySql sql = new MySql();
+    /**
+     * Creates new form ConsultaOdonto
+     */
+    public frmConsultaOdonto2(String c, String cpp) {
+        initComponents();
+        cd=c;
+        cp=cpp;
+        actualizar();
+        llenarPrincipal();
+        cargarf_n();
+        cargar_sub();
+        habilitar_resumen(false);
+        Odontograma_Inicial();
+        Odontograma_Realizado();
+        nueva_consulta();
+        llenarEvaluaciones();
+        llenar_subsiguiente();
+    }
+    public frmConsultaOdonto2() {
+        initComponents();
+        
+    }
+    
+    public void nueva_consulta(){
+    sql.EjecutarConsultas("call insertar_ConOdonto("+idpaciente+","+iddoctor+")");
+    try {
+        int cont=0;
+        int c=0;
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select idconsulta_odonto from consulta_odonto");
+            while (sql.rs.next()) {
+                cont++;
+            }
+            sql.rs.close();
+            sql.rs = sql.s.executeQuery("select idconsulta_odonto from consulta_odonto");
+            while (sql.rs.next()) {
+                c++;
+                if(c==cont){idconsulta=sql.rs.getInt(1);};
+            }
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    public String cd="";
+    public String cp="";
+    public int idpaciente=0;
+    public int iddoctor=0;
+    public int idconsulta=0;
+    
+    public void llenarPrincipal(){
+    txtNcuenta.setText(cp);
+    JTextField A[]= { txtNidentida,txtnombre,txtapellido,
+        this.txtdireccion,this.txtcorreo,txttelefono,this.txtprocedencia,
+        this.txtnombreEm,this.txttelefonoEm };
+    sql.camposArreglo("call buscar_paciente("+cp+")", A);
+    JTextField D[]={this.txtPeso,this.txtTalla,this.txtIMC,this.txtTemperatura,this.txtPulso,this.txtPA};
+    sql.camposArreglo("call buscar_preclinica("+cp+")", D);
+    idpaciente = sql.valor("select buscar_idpaciente(" + cp + ")");
+    iddoctor = sql.valor("select buscar_iddoctores(" + cd + ")");
+    this.CargarModelos();
+    cargarsexo();
+    llenarAP();
+    llenar_ModeloR();
+    this.jButton1.setEnabled(false);
+    this.jButton2.setEnabled(false);
+    }
+    
+    public void cargar_sub(){
+    this.txtNcuenta1.setText(txtNcuenta.getText());
+    this.txtNidentida1.setText(txtNidentida.getText());
+    txtnombre1.setText(txtnombre.getText());
+    txtapellido1.setText(txtapellido.getText());
+    txtdireccion1.setText(txtdireccion.getText());
+    txtprocedencia4.setText(txtprocedencia.getText());
+    txtedad.setText(txtEdad.getText());
+    }
+    
+    void cargarf_n(){
+        String fecha="";
+    try {
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select fecha_nacimiento from persona where nocuenta="+cp);
+            while (sql.rs.next()) {
+                fecha= (sql.rs.getObject(1).toString());
+            }
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        validacion va=new validacion();
+        txtEdad.setText(va.obtenerEdad(fecha));
+    }
+    
+    void cargarsexo(){
+        int sexo=0;
+    try {
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select sexo_idsexo from persona where nocuenta="+cp);
+            while (sql.rs.next()) {
+                sexo= Integer.parseInt(sql.rs.getObject(1).toString());
+            }
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        if(sexo==1){cmbsexo.setSelectedIndex(0);cmbsexo1.setSelectedIndex(0);}
+        if(sexo==2){cmbsexo.setSelectedIndex(1);cmbsexo1.setSelectedIndex(1);}
+    }
+    
+    void actualizar(){
+    validacion va=new validacion();
+        this.txtFecha.setText(va.getfecha());
+        this.txtHora.setText(va.getHora());
+    }
+    
+    public frmReceta receta = new frmReceta(this);
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        g1 = new javax.swing.ButtonGroup();
+        g2 = new javax.swing.ButtonGroup();
+        g3 = new javax.swing.ButtonGroup();
+        g4 = new javax.swing.ButtonGroup();
+        g5 = new javax.swing.ButtonGroup();
+        g6 = new javax.swing.ButtonGroup();
+        g7 = new javax.swing.ButtonGroup();
+        g8 = new javax.swing.ButtonGroup();
+        g9 = new javax.swing.ButtonGroup();
+        g10 = new javax.swing.ButtonGroup();
+        g11 = new javax.swing.ButtonGroup();
+        g12 = new javax.swing.ButtonGroup();
+        g13 = new javax.swing.ButtonGroup();
+        g14 = new javax.swing.ButtonGroup();
+        g15 = new javax.swing.ButtonGroup();
+        g16 = new javax.swing.ButtonGroup();
+        g17 = new javax.swing.ButtonGroup();
+        g18 = new javax.swing.ButtonGroup();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        JPP = new javax.swing.JTabbedPane();
+        JpPrincipal = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        txtNcuenta = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        cmbsexo = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
+        txtFecha = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        txtHora = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        txtnombre = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtapellido = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        txtdireccion = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        txtNidentida = new javax.swing.JTextField();
+        txtprocedencia = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        txttelefono = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        txtnombreEm = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        txttelefonoEm = new javax.swing.JTextField();
+        txtcorreo = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        txtEdad = new javax.swing.JTextField();
+        txtPeso = new javax.swing.JTextField();
+        jLabel24 = new javax.swing.JLabel();
+        txtTalla = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        txtTemperatura = new javax.swing.JTextField();
+        txtPA = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        txtPulso = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        txtIMC = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        JpAntesedentesPersonales = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaAP = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        JPEvaluacionClinica = new javax.swing.JPanel();
+        jLabel49 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        Tabla_E = new javax.swing.JTable();
+        jLabel50 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        Tabla_A = new javax.swing.JTable();
+        btnae = new javax.swing.JButton();
+        btnge = new javax.swing.JButton();
+        JPOdontogramaInicial = new javax.swing.JPanel();
+        jLabel51 = new javax.swing.JLabel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        JAinicial = new javax.swing.JTextArea();
+        btnnuevo1 = new javax.swing.JButton();
+        JPResumen = new javax.swing.JPanel();
+        jLabel79 = new javax.swing.JLabel();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        JAindicaciones = new javax.swing.JTextArea();
+        jScrollPane12 = new javax.swing.JScrollPane();
+        JAdiagnostico = new javax.swing.JTextArea();
+        jScrollPane13 = new javax.swing.JScrollPane();
+        JAresumen = new javax.swing.JTextArea();
+        jLabel82 = new javax.swing.JLabel();
+        jLabel83 = new javax.swing.JLabel();
+        jLabel84 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        btnnuevo = new javax.swing.JButton();
+        btncancelar = new javax.swing.JButton();
+        btnguardar = new javax.swing.JButton();
+        btnnuevoR1 = new javax.swing.JButton();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        resumen = new javax.swing.JTable();
+        JpOdontogramaRealizado = new javax.swing.JPanel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        JArealizado = new javax.swing.JTextArea();
+        btnar = new javax.swing.JButton();
+        btngr = new javax.swing.JButton();
+        JPSubsiguietnes = new javax.swing.JPanel();
+        jLabel62 = new javax.swing.JLabel();
+        txtNcuenta1 = new javax.swing.JTextField();
+        jLabel63 = new javax.swing.JLabel();
+        txtnombre1 = new javax.swing.JTextField();
+        jLabel64 = new javax.swing.JLabel();
+        txtapellido1 = new javax.swing.JTextField();
+        jLabel65 = new javax.swing.JLabel();
+        txtdireccion1 = new javax.swing.JTextField();
+        jLabel66 = new javax.swing.JLabel();
+        txtNidentida1 = new javax.swing.JTextField();
+        jLabel67 = new javax.swing.JLabel();
+        txtprocedencia4 = new javax.swing.JTextField();
+        jLabel68 = new javax.swing.JLabel();
+        cmbsexo1 = new javax.swing.JComboBox<>();
+        jLabel69 = new javax.swing.JLabel();
+        txtedad = new javax.swing.JTextField();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        TablaSS = new javax.swing.JTable();
+        btngr1 = new javax.swing.JButton();
+
+        jRadioButton1.setText("jRadioButton1");
+
+        setClosable(true);
+
+        JPP.setBackground(new java.awt.Color(255, 223, 0));
+        JPP.setAutoscrolls(true);
+
+        JpPrincipal.setBackground(new java.awt.Color(255, 255, 255));
+        JpPrincipal.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel5.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel5.setText("Número de Cuenta:");
+        JpPrincipal.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 11, -1, -1));
+
+        txtNcuenta.setEditable(false);
+        txtNcuenta.setBackground(new java.awt.Color(255, 223, 0));
+        txtNcuenta.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtNcuenta.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtNcuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNcuentaActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtNcuenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 11, 218, 24));
+
+        jLabel10.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel10.setText("Sexo:");
+        JpPrincipal.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 267, -1, 24));
+
+        cmbsexo.setBackground(new java.awt.Color(255, 223, 0));
+        cmbsexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hombre", "Mujer" }));
+        cmbsexo.setToolTipText("");
+        cmbsexo.setBorder(null);
+        cmbsexo.setEnabled(false);
+        cmbsexo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbsexoActionPerformed(evt);
+            }
+        });
+        cmbsexo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbsexoKeyPressed(evt);
+            }
+        });
+        JpPrincipal.add(cmbsexo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 271, 112, -1));
+
+        jLabel17.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel17.setText("Fecha actual");
+        JpPrincipal.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 631, -1, -1));
+
+        txtFecha.setEditable(false);
+        txtFecha.setBackground(new java.awt.Color(255, 223, 0));
+        txtFecha.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtFecha.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtFecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFechaActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(95, 624, 135, 24));
+
+        jLabel18.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel18.setText("Hora actual");
+        JpPrincipal.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 674, -1, -1));
+
+        txtHora.setEditable(false);
+        txtHora.setBackground(new java.awt.Color(255, 223, 0));
+        txtHora.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtHora.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtHora.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHoraActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtHora, new org.netbeans.lib.awtextra.AbsoluteConstraints(102, 667, 133, 24));
+
+        jLabel14.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel14.setText("Edad:");
+        JpPrincipal.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 484, -1, 24));
+
+        jLabel15.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel15.setText("Peso:");
+        JpPrincipal.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 485, -1, 24));
+
+        jLabel26.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel26.setText("Temperatura:");
+        JpPrincipal.add(jLabel26, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 523, -1, -1));
+
+        jLabel28.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel28.setText("Presion arterial:");
+        JpPrincipal.add(jLabel28, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 555, -1, -1));
+
+        jLabel30.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel30.setText("Pulso: ");
+        JpPrincipal.add(jLabel30, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 599, -1, -1));
+
+        jLabel16.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel16.setText("Talla:");
+        JpPrincipal.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, -1, 24));
+
+        jLabel19.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel19.setText("HEA:");
+        JpPrincipal.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(502, 18, -1, -1));
+
+        jTextArea1.setBackground(new java.awt.Color(255, 223, 0));
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        JpPrincipal.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(502, 38, 432, 473));
+
+        txtnombre.setEditable(false);
+        txtnombre.setBackground(new java.awt.Color(255, 223, 0));
+        txtnombre.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtnombre.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtnombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtnombreActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtnombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 54, 288, 24));
+
+        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel3.setText("Nombre:");
+        JpPrincipal.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 54, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel4.setText("Apellido:");
+        JpPrincipal.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 89, -1, -1));
+
+        txtapellido.setEditable(false);
+        txtapellido.setBackground(new java.awt.Color(255, 223, 0));
+        txtapellido.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtapellido.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtapellido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtapellidoActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtapellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(76, 89, 286, 24));
+
+        jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel6.setText("Dirección:");
+        JpPrincipal.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 124, -1, -1));
+
+        txtdireccion.setEditable(false);
+        txtdireccion.setBackground(new java.awt.Color(255, 223, 0));
+        txtdireccion.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtdireccion.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtdireccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtdireccionActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtdireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(84, 124, 278, 24));
+
+        jLabel7.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel7.setText("Número de Identidad:");
+        JpPrincipal.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 160, -1, -1));
+
+        txtNidentida.setEditable(false);
+        txtNidentida.setBackground(new java.awt.Color(255, 223, 0));
+        txtNidentida.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtNidentida.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtNidentida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNidentidaActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtNidentida, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 160, 217, 24));
+
+        txtprocedencia.setEditable(false);
+        txtprocedencia.setBackground(new java.awt.Color(255, 223, 0));
+        txtprocedencia.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtprocedencia.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtprocedencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtprocedenciaActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtprocedencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(102, 202, 260, 24));
+
+        jLabel9.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel9.setText("Procedencia:");
+        JpPrincipal.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 202, -1, 24));
+
+        jLabel13.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel13.setText("Telefono:");
+        JpPrincipal.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 232, -1, -1));
+
+        txttelefono.setEditable(false);
+        txttelefono.setBackground(new java.awt.Color(255, 223, 0));
+        txttelefono.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txttelefono.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txttelefono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttelefonoActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txttelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(81, 232, 281, 24));
+
+        jLabel20.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel20.setText("Nombre:");
+        JpPrincipal.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 378, -1, -1));
+
+        txtnombreEm.setEditable(false);
+        txtnombreEm.setBackground(new java.awt.Color(255, 223, 0));
+        txtnombreEm.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtnombreEm.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtnombreEm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtnombreEmActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtnombreEm, new org.netbeans.lib.awtextra.AbsoluteConstraints(81, 374, 228, 24));
+
+        jLabel21.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel21.setText("Telefono:");
+        JpPrincipal.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 416, -1, -1));
+
+        txttelefonoEm.setEditable(false);
+        txttelefonoEm.setBackground(new java.awt.Color(255, 223, 0));
+        txttelefonoEm.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txttelefonoEm.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txttelefonoEm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttelefonoEmActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txttelefonoEm, new org.netbeans.lib.awtextra.AbsoluteConstraints(81, 416, 228, 24));
+
+        txtcorreo.setEditable(false);
+        txtcorreo.setBackground(new java.awt.Color(255, 223, 0));
+        txtcorreo.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtcorreo.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtcorreo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtcorreoActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtcorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 302, 210, 24));
+
+        jLabel22.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel22.setText("Correo institucional:");
+        JpPrincipal.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 306, -1, -1));
+
+        jLabel23.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel23.setText("En caso de emergencia llamar a:");
+        JpPrincipal.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 339, -1, 24));
+
+        txtEdad.setEditable(false);
+        txtEdad.setBackground(new java.awt.Color(255, 223, 0));
+        txtEdad.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtEdad.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtEdad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEdadActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtEdad, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 484, 100, 24));
+
+        txtPeso.setEditable(false);
+        txtPeso.setBackground(new java.awt.Color(255, 223, 0));
+        txtPeso.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtPeso.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtPeso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPesoActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtPeso, new org.netbeans.lib.awtextra.AbsoluteConstraints(211, 484, 100, 24));
+
+        jLabel24.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel24.setText("Kg.");
+        JpPrincipal.add(jLabel24, new org.netbeans.lib.awtextra.AbsoluteConstraints(315, 488, -1, -1));
+
+        txtTalla.setEditable(false);
+        txtTalla.setBackground(new java.awt.Color(255, 223, 0));
+        txtTalla.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtTalla.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtTalla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTallaActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtTalla, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 519, 100, 24));
+
+        jLabel25.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel25.setText("cm.");
+        JpPrincipal.add(jLabel25, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 523, -1, -1));
+
+        jLabel32.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel32.setText("°C");
+        JpPrincipal.add(jLabel32, new org.netbeans.lib.awtextra.AbsoluteConstraints(324, 523, -1, -1));
+
+        txtTemperatura.setEditable(false);
+        txtTemperatura.setBackground(new java.awt.Color(255, 223, 0));
+        txtTemperatura.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtTemperatura.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtTemperatura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTemperaturaActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(274, 519, 46, 24));
+
+        txtPA.setEditable(false);
+        txtPA.setBackground(new java.awt.Color(255, 223, 0));
+        txtPA.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtPA.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtPA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPAActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtPA, new org.netbeans.lib.awtextra.AbsoluteConstraints(109, 555, 65, 24));
+
+        jLabel29.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel29.setText("mmHg");
+        JpPrincipal.add(jLabel29, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 555, -1, -1));
+
+        txtPulso.setEditable(false);
+        txtPulso.setBackground(new java.awt.Color(255, 223, 0));
+        txtPulso.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtPulso.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtPulso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPulsoActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtPulso, new org.netbeans.lib.awtextra.AbsoluteConstraints(57, 595, 70, 24));
+
+        jLabel31.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel31.setText("mmHg");
+        JpPrincipal.add(jLabel31, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 600, -1, -1));
+
+        txtIMC.setEditable(false);
+        txtIMC.setBackground(new java.awt.Color(255, 223, 0));
+        txtIMC.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        txtIMC.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtIMC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIMCActionPerformed(evt);
+            }
+        });
+        JpPrincipal.add(txtIMC, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 560, 100, 24));
+
+        jLabel27.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel27.setText("IMC:");
+        JpPrincipal.add(jLabel27, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 560, -1, -1));
+
+        JPP.addTab("Principal", JpPrincipal);
+
+        JpAntesedentesPersonales.setBackground(new java.awt.Color(255, 255, 255));
+
+        tablaAP.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ANTECEDENTES", "OBSERVACIONES"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaAP.getTableHeader().setReorderingAllowed(false);
+        tablaAP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaAPMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaAP);
+        if (tablaAP.getColumnModel().getColumnCount() > 0) {
+            tablaAP.getColumnModel().getColumn(0).setMinWidth(200);
+            tablaAP.getColumnModel().getColumn(0).setMaxWidth(200);
+        }
+
+        jButton1.setBackground(new java.awt.Color(255, 223, 0));
+        jButton1.setText("MODIFICAR");
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setBackground(new java.awt.Color(255, 223, 0));
+        jButton2.setText("NUEVO");
+        jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("NOTA: En caso de positivo detallar inicio de la enfermedad y tratamiento en OBSERVACIONES");
+
+        javax.swing.GroupLayout JpAntesedentesPersonalesLayout = new javax.swing.GroupLayout(JpAntesedentesPersonales);
+        JpAntesedentesPersonales.setLayout(JpAntesedentesPersonalesLayout);
+        JpAntesedentesPersonalesLayout.setHorizontalGroup(
+            JpAntesedentesPersonalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JpAntesedentesPersonalesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpAntesedentesPersonalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JpAntesedentesPersonalesLayout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2))
+                .addContainerGap(451, Short.MAX_VALUE))
+            .addComponent(jScrollPane2)
+        );
+        JpAntesedentesPersonalesLayout.setVerticalGroup(
+            JpAntesedentesPersonalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JpAntesedentesPersonalesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JpAntesedentesPersonalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(205, Short.MAX_VALUE))
+        );
+
+        JPP.addTab("Antecedentes personales", JpAntesedentesPersonales);
+
+        JPEvaluacionClinica.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel49.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel49.setText("Evaluacion clinica");
+
+        Tabla_E.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Diente Sano", "s", null, null},
+                {"Dientes cariedos", "c", null, null},
+                {"Dientes obturados", "o", null, null},
+                {"Extraccion indicada", "Ei", null, null},
+                {"Obturada previamente", "OR", null, null},
+                {"Perdido", "P", null, null},
+                {"Parodontopias", "L", null, null},
+                {"Sintomatologia bruxismo", "B", null, null}
+            },
+            new String [] {
+                "Descripcion", "Simbologia", "Numero", "Pre"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        Tabla_E.setRowHeight(25);
+        jScrollPane3.setViewportView(Tabla_E);
+
+        jLabel50.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel50.setText("Evaluacion clinica");
+
+        Tabla_A.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"Encia", null},
+                {"Lengua", ""},
+                {"Labios", null},
+                {"Carrillos", null},
+                {"Piso de la boca", null},
+                {"Ganglios Linfaticos", null},
+                {"Salivacion", null},
+                {"Paladar Blando", null},
+                {"Paladar duro", null},
+                {"ATM", null},
+                {"Endodoncia", null},
+                {"Supernumerarios", null},
+                {"Macrodoncia", null},
+                {"Microdoncia", null},
+                {"Amigdalas", null},
+                {"Otros", null}
+            },
+            new String [] {
+                "Area", "Afectacion"
+            }
+        ));
+        Tabla_A.setRowHeight(25);
+        jScrollPane4.setViewportView(Tabla_A);
+        if (Tabla_A.getColumnModel().getColumnCount() > 0) {
+            Tabla_A.getColumnModel().getColumn(0).setMinWidth(200);
+            Tabla_A.getColumnModel().getColumn(0).setMaxWidth(200);
+        }
+
+        btnae.setBackground(new java.awt.Color(255, 223, 0));
+        btnae.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btnae.setText("Actualizar");
+        btnae.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btnae.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnaeActionPerformed(evt);
+            }
+        });
+
+        btnge.setBackground(new java.awt.Color(255, 223, 0));
+        btnge.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btnge.setText("Guardar");
+        btnge.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btnge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btngeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout JPEvaluacionClinicaLayout = new javax.swing.GroupLayout(JPEvaluacionClinica);
+        JPEvaluacionClinica.setLayout(JPEvaluacionClinicaLayout);
+        JPEvaluacionClinicaLayout.setHorizontalGroup(
+            JPEvaluacionClinicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPEvaluacionClinicaLayout.createSequentialGroup()
+                .addComponent(jLabel49)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(JPEvaluacionClinicaLayout.createSequentialGroup()
+                .addGroup(JPEvaluacionClinicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 988, Short.MAX_VALUE)
+                    .addGroup(JPEvaluacionClinicaLayout.createSequentialGroup()
+                        .addGroup(JPEvaluacionClinicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel50)
+                            .addGroup(JPEvaluacionClinicaLayout.createSequentialGroup()
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnge, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(btnae, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        JPEvaluacionClinicaLayout.setVerticalGroup(
+            JPEvaluacionClinicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPEvaluacionClinicaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel49)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel50)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(JPEvaluacionClinicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(JPEvaluacionClinicaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnae, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnge, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        JPP.addTab("Evaluacion y examen", JPEvaluacionClinica);
+
+        JPOdontogramaInicial.setBackground(new java.awt.Color(255, 255, 255));
+        JPOdontogramaInicial.setAutoscrolls(true);
+        JPOdontogramaInicial.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        JPOdontogramaInicial.setName(""); // NOI18N
+
+        jLabel51.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel51.setText("Odontograma inicial");
+
+        JAinicial.setColumns(20);
+        JAinicial.setRows(5);
+        jScrollPane7.setViewportView(JAinicial);
+
+        btnnuevo1.setBackground(new java.awt.Color(255, 223, 0));
+        btnnuevo1.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btnnuevo1.setText("Guardar");
+        btnnuevo1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btnnuevo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnnuevo1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout JPOdontogramaInicialLayout = new javax.swing.GroupLayout(JPOdontogramaInicial);
+        JPOdontogramaInicial.setLayout(JPOdontogramaInicialLayout);
+        JPOdontogramaInicialLayout.setHorizontalGroup(
+            JPOdontogramaInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPOdontogramaInicialLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(JPOdontogramaInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel51)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 888, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnnuevo1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 78, Short.MAX_VALUE))
+        );
+        JPOdontogramaInicialLayout.setVerticalGroup(
+            JPOdontogramaInicialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPOdontogramaInicialLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel51)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnnuevo1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(299, Short.MAX_VALUE))
+        );
+
+        JPP.addTab("Odontograma inicial", JPOdontogramaInicial);
+
+        JPResumen.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel79.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+
+        JAindicaciones.setColumns(20);
+        JAindicaciones.setRows(5);
+        JAindicaciones.setBorder(null);
+        jScrollPane11.setViewportView(JAindicaciones);
+
+        JAdiagnostico.setColumns(20);
+        JAdiagnostico.setRows(5);
+        JAdiagnostico.setBorder(null);
+        jScrollPane12.setViewportView(JAdiagnostico);
+
+        JAresumen.setColumns(20);
+        JAresumen.setRows(5);
+        JAresumen.setBorder(null);
+        jScrollPane13.setViewportView(JAresumen);
+
+        jLabel82.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel82.setText("Resumen clinico");
+
+        jLabel83.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel83.setText("Diagnostico");
+
+        jLabel84.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel84.setText("Plan de estudio y tratamiento");
+
+        jPanel8.setBackground(new java.awt.Color(65, 105, 225));
+
+        btnnuevo.setBackground(new java.awt.Color(255, 223, 0));
+        btnnuevo.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btnnuevo.setText("NUEVO");
+        btnnuevo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btnnuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnnuevoActionPerformed(evt);
+            }
+        });
+
+        btncancelar.setBackground(new java.awt.Color(255, 223, 0));
+        btncancelar.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btncancelar.setText("CANCELAR");
+        btncancelar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btncancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btncancelarActionPerformed(evt);
+            }
+        });
+
+        btnguardar.setBackground(new java.awt.Color(255, 223, 0));
+        btnguardar.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btnguardar.setText("GUARDAR");
+        btnguardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btnguardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnguardarActionPerformed(evt);
+            }
+        });
+
+        btnnuevoR1.setBackground(new java.awt.Color(255, 223, 0));
+        btnnuevoR1.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btnnuevoR1.setText("RECETAR");
+        btnnuevoR1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btnnuevoR1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnnuevoR1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(160, 160, 160)
+                .addComponent(btnnuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnguardar, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(btncancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnnuevoR1, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(213, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnnuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnguardar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btncancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnnuevoR1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        resumen.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Doctor", "Resumen", "Diagnostico", "Indicaciones", "Fecha"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane6.setViewportView(resumen);
+
+        javax.swing.GroupLayout JPResumenLayout = new javax.swing.GroupLayout(JPResumen);
+        JPResumen.setLayout(JPResumenLayout);
+        JPResumenLayout.setHorizontalGroup(
+            JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPResumenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPResumenLayout.createSequentialGroup()
+                        .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel82))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 519, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel83))
+                        .addGap(18, 18, 18)
+                        .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel84))
+                        .addContainerGap(20, Short.MAX_VALUE))
+                    .addGroup(JPResumenLayout.createSequentialGroup()
+                        .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane6)
+                            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel79)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        JPResumenLayout.setVerticalGroup(
+            JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPResumenLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel83)
+                        .addComponent(jLabel84, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel82))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(JPResumenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPResumenLayout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jLabel79)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPResumenLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(118, 118, 118))))
+        );
+
+        JPP.addTab("Resumen", JPResumen);
+
+        JpOdontogramaRealizado.setBackground(new java.awt.Color(255, 255, 255));
+        JpOdontogramaRealizado.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        JArealizado.setColumns(20);
+        JArealizado.setRows(5);
+        jScrollPane8.setViewportView(JArealizado);
+
+        JpOdontogramaRealizado.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 930, 390));
+
+        btnar.setBackground(new java.awt.Color(255, 223, 0));
+        btnar.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btnar.setText("Actualizar");
+        btnar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btnar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnarActionPerformed(evt);
+            }
+        });
+        JpOdontogramaRealizado.add(btnar, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 420, 110, 30));
+
+        btngr.setBackground(new java.awt.Color(255, 223, 0));
+        btngr.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btngr.setText("Guardar");
+        btngr.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btngr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btngrActionPerformed(evt);
+            }
+        });
+        JpOdontogramaRealizado.add(btngr, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 420, 110, 30));
+
+        JPP.addTab("Odontogrma realizado", JpOdontogramaRealizado);
+
+        JPSubsiguietnes.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel62.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel62.setText("Número de Cuenta:");
+
+        txtNcuenta1.setEditable(false);
+        txtNcuenta1.setBackground(new java.awt.Color(255, 223, 0));
+        txtNcuenta1.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtNcuenta1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtNcuenta1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNcuenta1ActionPerformed(evt);
+            }
+        });
+
+        jLabel63.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel63.setText("Nombre:");
+
+        txtnombre1.setEditable(false);
+        txtnombre1.setBackground(new java.awt.Color(255, 223, 0));
+        txtnombre1.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtnombre1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtnombre1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtnombre1ActionPerformed(evt);
+            }
+        });
+
+        jLabel64.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel64.setText("Apellido:");
+
+        txtapellido1.setEditable(false);
+        txtapellido1.setBackground(new java.awt.Color(255, 223, 0));
+        txtapellido1.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtapellido1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtapellido1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtapellido1ActionPerformed(evt);
+            }
+        });
+
+        jLabel65.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel65.setText("Dirección:");
+
+        txtdireccion1.setEditable(false);
+        txtdireccion1.setBackground(new java.awt.Color(255, 223, 0));
+        txtdireccion1.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtdireccion1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtdireccion1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtdireccion1ActionPerformed(evt);
+            }
+        });
+
+        jLabel66.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel66.setText("Número de Identidad:");
+
+        txtNidentida1.setEditable(false);
+        txtNidentida1.setBackground(new java.awt.Color(255, 223, 0));
+        txtNidentida1.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtNidentida1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtNidentida1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNidentida1ActionPerformed(evt);
+            }
+        });
+
+        jLabel67.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel67.setText("Procedencia:");
+
+        txtprocedencia4.setEditable(false);
+        txtprocedencia4.setBackground(new java.awt.Color(255, 223, 0));
+        txtprocedencia4.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtprocedencia4.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtprocedencia4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtprocedencia4ActionPerformed(evt);
+            }
+        });
+
+        jLabel68.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel68.setText("Sexo:");
+
+        cmbsexo1.setBackground(new java.awt.Color(255, 223, 0));
+        cmbsexo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hombre", "Mujer" }));
+        cmbsexo1.setToolTipText("");
+        cmbsexo1.setBorder(null);
+        cmbsexo1.setEnabled(false);
+        cmbsexo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbsexo1ActionPerformed(evt);
+            }
+        });
+        cmbsexo1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cmbsexo1KeyPressed(evt);
+            }
+        });
+
+        jLabel69.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        jLabel69.setText("Edad:");
+
+        txtedad.setEditable(false);
+        txtedad.setBackground(new java.awt.Color(255, 223, 0));
+        txtedad.setFont(new java.awt.Font("Trebuchet MS", 0, 24)); // NOI18N
+        txtedad.setBorder(javax.swing.BorderFactory.createCompoundBorder());
+        txtedad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtedadActionPerformed(evt);
+            }
+        });
+
+        TablaSS.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Fecha y hora", "Presion arterial", "Tratamiento efectuado", "Firma medico", "Hora salida", "Aporte estud.", "Costo real"
+            }
+        ));
+        TablaSS.setRowHeight(25);
+        jScrollPane10.setViewportView(TablaSS);
+        if (TablaSS.getColumnModel().getColumnCount() > 0) {
+            TablaSS.getColumnModel().getColumn(2).setPreferredWidth(180);
+        }
+
+        btngr1.setBackground(new java.awt.Color(255, 223, 0));
+        btngr1.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
+        btngr1.setText("Nuevo");
+        btngr1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btngr1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btngr1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout JPSubsiguietnesLayout = new javax.swing.GroupLayout(JPSubsiguietnes);
+        JPSubsiguietnes.setLayout(JPSubsiguietnesLayout);
+        JPSubsiguietnesLayout.setHorizontalGroup(
+            JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPSubsiguietnesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPSubsiguietnesLayout.createSequentialGroup()
+                        .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel62)
+                            .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(txtNcuenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JPSubsiguietnesLayout.createSequentialGroup()
+                                    .addComponent(jLabel63)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtnombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JPSubsiguietnesLayout.createSequentialGroup()
+                                    .addComponent(jLabel64)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtapellido1, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JPSubsiguietnesLayout.createSequentialGroup()
+                                    .addComponent(jLabel65)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtdireccion1, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JPSubsiguietnesLayout.createSequentialGroup()
+                                    .addComponent(jLabel66)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtNidentida1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, JPSubsiguietnesLayout.createSequentialGroup()
+                                    .addComponent(jLabel67)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(txtprocedencia4, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 350, Short.MAX_VALUE)
+                        .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(JPSubsiguietnesLayout.createSequentialGroup()
+                                .addComponent(jLabel68)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbsexo1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(JPSubsiguietnesLayout.createSequentialGroup()
+                                .addComponent(jLabel69)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtedad, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btngr1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(110, 110, 110))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, JPSubsiguietnesLayout.createSequentialGroup()
+                        .addComponent(jScrollPane10)
+                        .addContainerGap())))
+        );
+        JPSubsiguietnesLayout.setVerticalGroup(
+            JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPSubsiguietnesLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(JPSubsiguietnesLayout.createSequentialGroup()
+                        .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNcuenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel62))
+                        .addGap(12, 12, 12)
+                        .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtnombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel63)))
+                    .addGroup(JPSubsiguietnesLayout.createSequentialGroup()
+                        .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbsexo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel68, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel69, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtedad, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel64)
+                    .addComponent(txtapellido1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtdireccion1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel65))
+                .addGap(11, 11, 11)
+                .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel66)
+                    .addComponent(txtNidentida1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(JPSubsiguietnesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel67, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtprocedencia4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btngr1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane10, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        JPP.addTab("Subsiguiente", JPSubsiguietnes);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(JPP)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(JPP))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void txtNcuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNcuentaActionPerformed
+        txtnombre.requestFocus();
+    }//GEN-LAST:event_txtNcuentaActionPerformed
+
+    private void cmbsexoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbsexoActionPerformed
+
+    }//GEN-LAST:event_cmbsexoActionPerformed
+
+    private void cmbsexoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbsexoKeyPressed
+      /*  if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            this.cmbestadocivil.requestFocus();
+            this.cmbestadocivil.showPopup();
+        }*/
+    }//GEN-LAST:event_cmbsexoKeyPressed
+
+    private void txtFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFechaActionPerformed
+
+    private void txtHoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHoraActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHoraActionPerformed
+
+    private void txtNcuenta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNcuenta1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNcuenta1ActionPerformed
+
+    private void txtnombre1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnombre1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtnombre1ActionPerformed
+
+    private void txtapellido1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtapellido1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtapellido1ActionPerformed
+
+    private void txtdireccion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdireccion1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtdireccion1ActionPerformed
+
+    private void txtNidentida1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNidentida1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNidentida1ActionPerformed
+
+    private void txtprocedencia4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtprocedencia4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtprocedencia4ActionPerformed
+
+    private void cmbsexo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbsexo1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbsexo1ActionPerformed
+
+    private void cmbsexo1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbsexo1KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbsexo1KeyPressed
+
+    private void txtedadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtedadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtedadActionPerformed
+
+    private void btnnuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnnuevoActionPerformed
+        habilitar_resumen(true);
+        this.JAdiagnostico.setText("");
+        this.JAindicaciones.setText("");
+        this.JAresumen.setText("");
+    }//GEN-LAST:event_btnnuevoActionPerformed
+
+    private void btncancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btncancelarActionPerformed
+        habilitar_resumen(false);
+    }//GEN-LAST:event_btncancelarActionPerformed
+
+    private void btnguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarActionPerformed
+        // TODO add your handling code here:
+        if(this.cd.equals("")){}else{
+        String f;
+        String r=JAresumen.getText();
+        String d=JAdiagnostico.getText();
+        String i=JAindicaciones.getText();
+        f=txtFecha.getText();
+        
+         
+            sql.EjecutarConsultas("call insert_Resumen_Odonto('"+r+"','"+d+"','"+i+"','"+f+"',"+this.idpaciente+","+this.iddoctor+")");
+         
+        llenar_ModeloR();
+        habilitar_resumen(false);
+        }
+    }//GEN-LAST:event_btnguardarActionPerformed
+
+    private void tablaAPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAPMouseClicked
+       /* obtenerJtable(modelo_AP, tablaAP);*/
+       int select=tablaAP.getSelectedRow();
+       id=select+1;
+       AP=tablaAP.getValueAt(select, 0).toString();
+        try {
+        OBS=tablaAP.getValueAt(select, 1).toString();    
+        } catch (Exception e) {
+            OBS="";
+        }
+       
+       if(OBS.equals("")){this.jButton2.setEnabled(true);this.jButton1.setEnabled(false);}
+       else{this.jButton1.setEnabled(true);this.jButton2.setEnabled(false);}
+       
+    }//GEN-LAST:event_tablaAPMouseClicked
+    
+    public String AP="";
+    public String OBS="";
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(this.cd.equals("")){}else{
+        frmModificar1 mo = new frmModificar1(this,2,id,idpaciente);
+            mo.setVisible(true);
+             id = -1;}
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    public void llenarAP(){
+        int cont=0;
+        modelo_AP.setRowCount(0);
+        try {
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select antecedentes_personales from antecedentes_personales");
+            while (sql.rs.next()) {
+                modelo_AP.addRow(new Object[]{sql.rs.getString(1)});
+                cont++;
+            }
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        try {
+            
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select antecedentes_personales_idantecedentes_personales, observaciones from pacientes_has_antecedentes_personales "
+                    + "where pacientes_id_pacientes="+idpaciente+"");
+            while (sql.rs.next()) {
+                for(int c=1;c<=cont;c++){
+                if(sql.rs.getInt(1)==c){
+                tablaAP.setValueAt(sql.rs.getString(2), c-1, 1);
+                }
+                } 
+            }
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+    }
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+if(this.cd.equals("")){}else{        
+            frmModificar1 mo = new frmModificar1(this,1,id,idpaciente);
+            mo.setVisible(true);
+             id = -1;}
+    }//GEN-LAST:event_jButton2ActionPerformed
+    public void CargarModelos(){
+    modelo_AP = (DefaultTableModel) tablaAP.getModel();
+    modelo_R = (DefaultTableModel) resumen.getModel();
+    Modelo_E = (DefaultTableModel) Tabla_E.getModel();
+    Modelo_A = (DefaultTableModel) Tabla_A.getModel();
+    Modelo_SS = (DefaultTableModel) TablaSS.getModel();
+    } 
+    
+    DefaultTableModel modelo_AP,modelo_R, Modelo_E,Modelo_A,Modelo_SS;
+    int color=0;
+    int id = 1;
+    
+    private void txtnombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnombreActionPerformed
+        this.txtapellido.requestFocus();
+    }//GEN-LAST:event_txtnombreActionPerformed
+
+    private void txtapellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtapellidoActionPerformed
+        this.txtdireccion.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtapellidoActionPerformed
+
+    private void txtdireccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdireccionActionPerformed
+        this.txtNidentida.requestFocus();
+    }//GEN-LAST:event_txtdireccionActionPerformed
+
+    private void txtNidentidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNidentidaActionPerformed
+
+    }//GEN-LAST:event_txtNidentidaActionPerformed
+
+    private void txtprocedenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtprocedenciaActionPerformed
+        this.cmbsexo.requestFocus();
+        this.cmbsexo.showPopup();
+    }//GEN-LAST:event_txtprocedenciaActionPerformed
+
+    private void txttelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttelefonoActionPerformed
+        this.txtnombreEm.requestFocus();
+    }//GEN-LAST:event_txttelefonoActionPerformed
+
+    private void txtnombreEmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnombreEmActionPerformed
+        this.txttelefonoEm.requestFocus();
+    }//GEN-LAST:event_txtnombreEmActionPerformed
+
+    private void txttelefonoEmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttelefonoEmActionPerformed
+
+    }//GEN-LAST:event_txttelefonoEmActionPerformed
+
+    private void txtcorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcorreoActionPerformed
+        txtnombre.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_txtcorreoActionPerformed
+
+    private void txtEdadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEdadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEdadActionPerformed
+
+    private void txtPesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPesoActionPerformed
+
+    private void txtTallaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTallaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTallaActionPerformed
+
+    private void txtTemperaturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTemperaturaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTemperaturaActionPerformed
+
+    private void txtPAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPAActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPAActionPerformed
+
+    private void txtPulsoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPulsoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPulsoActionPerformed
+
+    private void txtIMCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIMCActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIMCActionPerformed
+
+    private void btnnuevoR1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnnuevoR1ActionPerformed
+        // TODO add your handling code here:
+        if(this.cd.equals("")){}else{
+        receta.actualizar(cd, cp);
+        receta.cargarfecha();
+        receta.show();
+        this.btnnuevoR1.setEnabled(false);}
+    }//GEN-LAST:event_btnnuevoR1ActionPerformed
+
+    private void btnnuevo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnnuevo1ActionPerformed
+        // TODO add your handling code here:
+       if(this.cd.equals("")){}else{
+            sql.EjecutarConsultas("call insertar_Odontograma(1,'"+JAinicial.getText()+"',"+idpaciente+")");
+            JOptionPane.showMessageDialog(null, "Guardado con exito con exito");
+            this.btnnuevo1.setEnabled(false);
+            this.JAinicial.setEditable(false);}
+    }//GEN-LAST:event_btnnuevo1ActionPerformed
+
+    private void btnarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnarActionPerformed
+        // TODO add your handling code here:
+        if(this.cd.equals("")){}else{
+        sql.EjecutarConsultas("call insertar_Odontograma(3,'"+JArealizado.getText()+"',"+idpaciente+")");
+        JOptionPane.showMessageDialog(null, "Modificado con exito");}
+    }//GEN-LAST:event_btnarActionPerformed
+
+    private void btngrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btngrActionPerformed
+        // TODO add your handling code here:
+        if(this.cd.equals("")){}else{
+         sql.EjecutarConsultas("call insertar_Odontograma(2,'"+JArealizado.getText()+"',"+idpaciente+")");
+          JOptionPane.showMessageDialog(null, "Guardado con exito con exito");
+        this.btngr.setEnabled(false);
+        this.btnar.setEnabled(true);}
+        
+    }//GEN-LAST:event_btngrActionPerformed
+
+    private void btngeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btngeActionPerformed
+        // TODO add your handling code here:
+        if(this.cd.equals("")){}else{
+        guardarEvaluaciones(1);
+        JOptionPane.showMessageDialog(null, "Guardado con Exito");}
+    }//GEN-LAST:event_btngeActionPerformed
+
+    private void btnaeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaeActionPerformed
+        // TODO add your handling code here:
+        if(this.cd.equals("")){}else{
+        guardarEvaluaciones(2);
+        JOptionPane.showMessageDialog(null, "Actualizado con Exito");}
+    }//GEN-LAST:event_btnaeActionPerformed
+    subsiguiente sub= new subsiguiente(this);
+    private void btngr1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btngr1ActionPerformed
+        // TODO add your handling code here:
+        if(this.cd.equals("")){}else{
+        sub.show();
+        }
+    }//GEN-LAST:event_btngr1ActionPerformed
+    
+    public void llenar_subsiguiente(){
+    sql.RegistrosTabla("call resumenen_subsiguiente("+idpaciente+")", Modelo_SS);
+    }
+    
+    public void guardarEvaluaciones(int opc){
+    int ida=0;
+    for(int x=0; x<16; x++){
+        ida=x+1;
+    sql.EjecutarConsultas("call insert_detalle_Area_Afectada("+opc+","+idpaciente+","+ida+",'"+Tabla_A.getValueAt(x, 1)+"')");}
+    
+    for(int x=0; x<8; x++){
+        ida=x+1;
+    sql.EjecutarConsultas("call insert_detalle_evaluacion_odonto("+opc+","+idpaciente+","+ida+",'"+Tabla_E.getValueAt(x, 2)+"','"+Tabla_E.getValueAt(x, 3)+"')");}
+    }
+    
+    public void llenarEvaluaciones(){
+    int x=0,ida=0;
+    if(sql.versiesta("select numero, pre from detalle_evaluacion_odonto where pacientes_id_pacientes="+idpaciente+"")){
+    btnge.setEnabled(false);
+    btnae.setEnabled(true);
+    try {
+            
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select numero, pre from detalle_evaluacion_odonto where pacientes_id_pacientes="+idpaciente+"");
+            while (sql.rs.next()) {
+                
+                Tabla_E.setValueAt(sql.rs.getString(1), x, 2);
+                Tabla_E.setValueAt(sql.rs.getString(2), x, 3);
+                x++;}
+            quitar_null();
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    try {
+            
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select observaciones from detalle_area_afectada where pacientes_id_pacientes="+idpaciente+"");
+            while (sql.rs.next()) {
+             if(!sql.rs.getString(1).equals("null")){
+             Tabla_A.setValueAt(sql.rs.getString(1), ida, 1);
+             }
+             else{Tabla_A.setValueAt("", ida, 1);}
+              ida++;
+                }
+               
+            
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }}else{
+    btnge.setEnabled(true);
+    btnae.setEnabled(false);    
+    }
+    
+    }
+    public void quitar_null(){
+    for(int i=0; i<Modelo_E.getRowCount();i++){
+    if(Modelo_E.getValueAt(i, 2).toString().equals("null")){
+    Tabla_E.setValueAt("", i, 2);
+    }
+    if(Modelo_E.getValueAt(i, 3).toString().equals("null")){
+    Tabla_E.setValueAt("", i, 3);
+    }
+    }
+    }
+    public void desbloquear(){
+        this.btnnuevoR1.setEnabled(true);
+    }
+    
+    public void Odontograma_Inicial(){
+    if(sql.versiesta("select odontograma_inicial from odontograma_inicial where pacientes_id_pacientes="+idpaciente+"")){
+    btnnuevo1.setEnabled(false);
+    JAinicial.setEditable(false);
+    try {
+            
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select odontograma_inicial from odontograma_inicial where pacientes_id_pacientes="+idpaciente+"");
+            while (sql.rs.next()) {
+                JAinicial.setText(sql.rs.getString(1));
+            }
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }}
+    }
+    
+    public void Odontograma_Realizado(){
+    if(sql.versiesta("select odontograma_final from odontograma_final where pacientes_id_pacientes="+idpaciente+"")){
+    btngr.setEnabled(false);
+    btnar.setEnabled(true);
+    try {           
+            sql.conec();
+            sql.rs = sql.s.executeQuery("select odontograma_final from odontograma_final where pacientes_id_pacientes="+idpaciente+"");
+            while (sql.rs.next()) {
+                JArealizado.setText(sql.rs.getString(1));
+            }
+            sql.rs.close();
+            sql.conexion.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }}else{btnar.setEnabled(false);}
+    }
+    
+    public void habilitar_resumen(boolean b){
+    this.JAdiagnostico.setEnabled(b);
+    this.JAindicaciones.setEnabled(b);
+    this.JAresumen.setEnabled(b);
+    this.btnguardar.setEnabled(b);
+    this.btncancelar.setEnabled(b);
+    this.btnnuevo.setEnabled(!b);
+    }
+    public void llenar_ModeloR(){
+    sql.RegistrosTabla("call resumenes_CG(4," + iddoctor + "," + idpaciente + ",'','','','',0,0,0,0,0,0)", modelo_R);
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea JAdiagnostico;
+    private javax.swing.JTextArea JAindicaciones;
+    private javax.swing.JTextArea JAinicial;
+    private javax.swing.JTextArea JArealizado;
+    private javax.swing.JTextArea JAresumen;
+    private javax.swing.JPanel JPEvaluacionClinica;
+    private javax.swing.JPanel JPOdontogramaInicial;
+    private javax.swing.JTabbedPane JPP;
+    private javax.swing.JPanel JPResumen;
+    private javax.swing.JPanel JPSubsiguietnes;
+    private javax.swing.JPanel JpAntesedentesPersonales;
+    private javax.swing.JPanel JpOdontogramaRealizado;
+    private javax.swing.JPanel JpPrincipal;
+    private javax.swing.JTable TablaSS;
+    private javax.swing.JTable Tabla_A;
+    private javax.swing.JTable Tabla_E;
+    private javax.swing.JButton btnae;
+    private javax.swing.JButton btnar;
+    private javax.swing.JButton btncancelar;
+    private javax.swing.JButton btnge;
+    private javax.swing.JButton btngr;
+    private javax.swing.JButton btngr1;
+    private javax.swing.JButton btnguardar;
+    private javax.swing.JButton btnnuevo;
+    private javax.swing.JButton btnnuevo1;
+    private javax.swing.JButton btnnuevoR1;
+    private javax.swing.JComboBox<String> cmbsexo;
+    private javax.swing.JComboBox<String> cmbsexo1;
+    private javax.swing.ButtonGroup g1;
+    private javax.swing.ButtonGroup g10;
+    private javax.swing.ButtonGroup g11;
+    private javax.swing.ButtonGroup g12;
+    private javax.swing.ButtonGroup g13;
+    private javax.swing.ButtonGroup g14;
+    private javax.swing.ButtonGroup g15;
+    private javax.swing.ButtonGroup g16;
+    private javax.swing.ButtonGroup g17;
+    private javax.swing.ButtonGroup g18;
+    private javax.swing.ButtonGroup g2;
+    private javax.swing.ButtonGroup g3;
+    private javax.swing.ButtonGroup g4;
+    private javax.swing.ButtonGroup g5;
+    private javax.swing.ButtonGroup g6;
+    private javax.swing.ButtonGroup g7;
+    private javax.swing.ButtonGroup g8;
+    private javax.swing.ButtonGroup g9;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel50;
+    private javax.swing.JLabel jLabel51;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel62;
+    private javax.swing.JLabel jLabel63;
+    private javax.swing.JLabel jLabel64;
+    private javax.swing.JLabel jLabel65;
+    private javax.swing.JLabel jLabel66;
+    private javax.swing.JLabel jLabel67;
+    private javax.swing.JLabel jLabel68;
+    private javax.swing.JLabel jLabel69;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel79;
+    private javax.swing.JLabel jLabel82;
+    private javax.swing.JLabel jLabel83;
+    private javax.swing.JLabel jLabel84;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
+    private javax.swing.JScrollPane jScrollPane13;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTable resumen;
+    private javax.swing.JTable tablaAP;
+    private javax.swing.JTextField txtEdad;
+    private javax.swing.JTextField txtFecha;
+    private javax.swing.JTextField txtHora;
+    private javax.swing.JTextField txtIMC;
+    private javax.swing.JTextField txtNcuenta;
+    private javax.swing.JTextField txtNcuenta1;
+    private javax.swing.JTextField txtNidentida;
+    private javax.swing.JTextField txtNidentida1;
+    private javax.swing.JTextField txtPA;
+    private javax.swing.JTextField txtPeso;
+    private javax.swing.JTextField txtPulso;
+    private javax.swing.JTextField txtTalla;
+    private javax.swing.JTextField txtTemperatura;
+    private javax.swing.JTextField txtapellido;
+    private javax.swing.JTextField txtapellido1;
+    private javax.swing.JTextField txtcorreo;
+    private javax.swing.JTextField txtdireccion;
+    private javax.swing.JTextField txtdireccion1;
+    private javax.swing.JTextField txtedad;
+    private javax.swing.JTextField txtnombre;
+    private javax.swing.JTextField txtnombre1;
+    private javax.swing.JTextField txtnombreEm;
+    private javax.swing.JTextField txtprocedencia;
+    private javax.swing.JTextField txtprocedencia4;
+    private javax.swing.JTextField txttelefono;
+    private javax.swing.JTextField txttelefonoEm;
+    // End of variables declaration//GEN-END:variables
+}
