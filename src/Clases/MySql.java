@@ -11,10 +11,10 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 public class MySql {
-    String BasedeDatos = "clinica";
-    String username = "ADMIN";
-    String password = "1881";
-    String puerto = ":3306";
+    String BasedeDatos = "3488754_clinica";
+    String username = "3488754_clinica";
+    String password = "clinica_1234";
+    String puerto = "3306";
     public Statement s;
     public Connection conexion;
     public ResultSet rs;
@@ -23,7 +23,8 @@ public class MySql {
         try {
             DriverManager.registerDriver(new org.gjt.mm.mysql.Driver());
             conexion = DriverManager.getConnection(
-                    "jdbc:mysql://localhost" + puerto + "/" + BasedeDatos, username, password);
+                    //"jdbc:mysql://fdb22.awardspace.net:" + puerto + "/" + BasedeDatos, username, password);
+                    "jdbc:mysql://fdb22.awardspace.net:3306/3488754_clinica", "3488754_clinica", "clinica_1234");
             s = conexion.createStatement();
         } catch (SQLException ex) {
             Logger.getLogger(MySql.class.getName()).log(Level.SEVERE, null, ex);
