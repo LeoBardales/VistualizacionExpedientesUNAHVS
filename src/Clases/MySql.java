@@ -11,9 +11,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
 public class MySql {
-    String BasedeDatos = "3488754_clinica";
-    String username = "3488754_clinica";
-    String password = "clinica_1234";
+    String BasedeDatos = "sql3363051";
+    String username = "sql3363051";
+    String password = "MdusAtcdye";
     String puerto = "3306";
     public Statement s;
     public Connection conexion;
@@ -23,11 +23,14 @@ public class MySql {
         try {
             DriverManager.registerDriver(new org.gjt.mm.mysql.Driver());
             conexion = DriverManager.getConnection(
-                    //"jdbc:mysql://fdb22.awardspace.net:" + puerto + "/" + BasedeDatos, username, password);
-                    "jdbc:mysql://fdb22.awardspace.net:3306/3488754_clinica", "3488754_clinica", "clinica_1234");
+                    "jdbc:mysql://sql3.freemysqlhosting.net:" + puerto + "/" + BasedeDatos, username, password);
+            s = conexion.createStatement();
+                    JOptionPane.showMessageDialog(null,"CONECTADO");
+                  
             s = conexion.createStatement();
         } catch (SQLException ex) {
             Logger.getLogger(MySql.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null,"ERRRRRROROROROROR");
         }
     }
      public void RegistrosTablaMetodos(String sql, DefaultTableModel modelo) {
