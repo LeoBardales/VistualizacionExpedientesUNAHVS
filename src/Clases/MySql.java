@@ -12,8 +12,8 @@ import javax.swing.table.TableColumn;
 
 public class MySql {
     String BasedeDatos = "sql3363051";
-    String username = "sql3363051";
-    String password = "MdusAtcdye";
+    String username = "root";
+    String password = "";
     String puerto = "3306";
     public Statement s;
     public Connection conexion;
@@ -23,7 +23,7 @@ public class MySql {
         try {
             DriverManager.registerDriver(new org.gjt.mm.mysql.Driver());
             conexion = DriverManager.getConnection(
-                    "jdbc:mysql://sql3.freemysqlhosting.net:" + puerto + "/" + BasedeDatos, username, password);
+                    "jdbc:mysql://localhost:" + puerto + "/" + BasedeDatos, username, password);
             s = conexion.createStatement();
                     JOptionPane.showMessageDialog(null,"CONECTADO");
                   

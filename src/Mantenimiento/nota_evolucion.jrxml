@@ -19,7 +19,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT * FROM clinica.resumenes
+		<![CDATA[SELECT * FROM sql3363051.resumenes
 where idresumenes=$P{idr}
 ;]]>
 	</queryString>
